@@ -1,21 +1,10 @@
-import logo from "./logo.svg";
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 
 import _ from "lodash";
-import faker from "faker";
-import React, {useEffect} from "react";
-import {Search, Grid, Header, Segment} from "semantic-ui-react";
 
-// swap out source/mock data below with this api call
-// https://docs.openaq.org/v2/locations?limit=100&page=1&offset=0&sort=desc&radius=1000&country=US&city=Chicago&order_by=lastUpdated&dumpRaw=false
-
-const source = _.times(5, () => ({
-  title: faker.company.companyName(),
-  description: faker.company.catchPhrase(),
-  image: faker.internet.avatar(),
-  price: faker.finance.amount(0, 100, 2, "$"),
-}));
+import React, {useEffect, useRef, useReducer, useCallback} from "react";
+import {Search, Grid} from "semantic-ui-react";
 
 const initialState = {
   loading: false,
@@ -40,11 +29,11 @@ function exampleReducer(state, action) {
 }
 
 function SearchExampleStandard() {
-  const [state, dispatch] = React.useReducer(exampleReducer, initialState);
+  const [state, dispatch] = useReducer(exampleReducer, initialState);
   const {loading, results, value} = state;
 
-  const timeoutRef = React.useRef();
-  const handleSearchChange = React.useCallback((e, data) => {
+  const timeoutRef = useRef();
+  const handleSearchChange = useCallback((e, data) => {
     clearTimeout(timeoutRef.current);
     dispatch({type: "START_SEARCH", query: data.value});
 
@@ -54,16 +43,17 @@ function SearchExampleStandard() {
         return;
       }
 
-      const re = new RegExp(_.escapeRegExp(data.value), "i");
-      const isMatch = (result) => re.test(result.title);
+      const citySearch = data.value;
+      const searchResults =
+        // https://docs.openaq.org/v2/cities?limit=100&page=1&offset=0&sort=asc&city=Washington&order_by=city
 
-      dispatch({
-        type: "FINISH_SEARCH",
-        results: _.filter(source, isMatch),
-      });
+        dispatch({
+          type: "FINISH_SEARCH",
+          results: [],
+        });
     }, 300);
   }, []);
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       clearTimeout(timeoutRef.current);
     };
