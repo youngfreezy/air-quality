@@ -44,13 +44,19 @@ function SearchExampleStandard() {
       }
 
       const citySearch = data.value;
-      const searchResults =
-        // https://docs.openaq.org/v2/cities?limit=100&page=1&offset=0&sort=asc&city=Washington&order_by=city
-
-        dispatch({
-          type: "FINISH_SEARCH",
-          results: [],
+      const searchResults = fetch(
+        `https://docs.openaq.org/v2/cities?limit=100&page=1&offset=0&sort=asc&city=${citySearch}&order_by=city`
+      )
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((err) => {
+          console.log("ERR IN TYPE AHEAD SEARCH: ", err);
         });
+
+      dispatch({
+        type: "FINISH_SEARCH",
+        results: [],
+      });
     }, 300);
   }, []);
   useEffect(() => {
