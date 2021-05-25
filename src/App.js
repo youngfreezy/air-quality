@@ -97,10 +97,10 @@ function App() {
       <span> Compare Air Quality in Two Cities in the USA (case sensitive)</span>
       <Grid.Row>
         <Grid.Column>
-          <SearchExampleStandard key={1}></SearchExampleStandard>
+          <SearchExampleStandard></SearchExampleStandard>
         </Grid.Column>
         <Grid.Column>
-          <SearchExampleStandard key={2}></SearchExampleStandard>
+          <SearchExampleStandard></SearchExampleStandard>
         </Grid.Column>
       </Grid.Row>
     </Grid>
